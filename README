@@ -1,0 +1,17 @@
+### Prerequisistes
+
+* [Docker](https://docs.docker.com/engine/installation/)
+* [Docker-compose](https://docs.docker.com/compose/install/)
+* Java 1.8
+* [Scala](http://www.scala-lang.org/download/)
+* [activator](http://www.typesafe.com/activator/download)
+
+### Instalation
+
+`$ git clone git@gitlab.com:kot-begemot/search-cluster.git`
+
+### Run
+
+    cd search-cluster
+    docker-compose up
+    activator run
