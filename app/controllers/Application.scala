@@ -12,9 +12,9 @@ import scala.concurrent.Future
 
 class Application @Inject()(messageService: MessageService) extends Controller {
 
-  def index = Action {
-    Ok("Your new application is ready.")
-    //messageService.all().map(msgs => Ok(Json.obj("status" -> "Ok", "messages" -> Json.toJson(msgs))))
+  def index = Action.async {
+//    Ok("Your new application is ready.")
+    messageService.all().map(msgs => Ok(Json.obj("status" -> "Ok", "messages" -> Json.toJson(msgs))))
   }
 
   def create = Action.async(BodyParsers.parse.json) { request =>

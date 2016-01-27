@@ -2,15 +2,12 @@
 
 # --- !Ups
 
-CREATE TABLE messages (
-    id SERIAL PRIMARY KEY,
-    message varchar(255) NOT NULL
-);
+create table "MESSAGES" ("id" bigint(20) NOT NULL PRIMARY KEY,"message" VARCHAR NOT NULL);
 
-INSERT INTO messages (message) values('Hi!');
-INSERT INTO messages (message) values('What''s up?');
-INSERT INTO messages (message) values('Am I alive now?');
+INSERT INTO messages values(1, 'Hi!');
+INSERT INTO messages values(2, 'What''s up?');
+INSERT INTO messages values(3, 'Your new application is ready.');
 
 # --- !Downs
 
-DROP TABLE messages;
+DROP TABLE "MESSAGES";

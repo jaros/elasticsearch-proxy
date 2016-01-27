@@ -23,7 +23,7 @@ class ApplicationSpec extends Specification {
       val home = route(FakeRequest(GET, "/")).get
 
       status(home) must equalTo(OK)
-      contentType(home) must beSome("text/plain")
+      contentType(home) must beSome("application/json")
       contentAsString(home) must contain ("Your new application is ready.")
     }
   }
