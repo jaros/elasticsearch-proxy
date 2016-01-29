@@ -56,7 +56,7 @@ class DBSpec extends Specification {
 
       // read all messages
       messages = Await.result(messageService.all(), 1 seconds)
-      messages.map(_.message).toSet must equalTo(testMessages.toSet)
+      messages.map(_.content).toSet must equalTo(testMessages.toSet)
     }
   }
 
