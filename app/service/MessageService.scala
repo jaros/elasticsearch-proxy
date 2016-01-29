@@ -16,8 +16,6 @@ class MessageService extends HasDatabaseConfig[JdbcProfile] {
 
   def all(): Future[Seq[Message]] = db.run(messages.result)
 
-  def create(message: Message) = dbConfig.db.run(messages += message)
-
   def findById(id: Int) = dbConfig.db.run(findQuery(id).result.head)
 
   def deleteById(id: Int) = dbConfig.db.run(findQuery(id).delete)
@@ -26,11 +24,18 @@ class MessageService extends HasDatabaseConfig[JdbcProfile] {
 
   def updateById(id: Int, message: Message) = dbConfig.db.run(findQuery(id).update(message))
 
+  private val insertQuery = messages returning messages.map(_.id) into ((message, id) => message.copy(id = id))
+
+  def create(text: String) : Future[Message] = {
+    val action = insertQuery += Message(0, text)
+    db.run(action)
+  }
+
   private def findQuery(id: Int) = messages.filter(_.id === id)
 
 
   private class MessageTable(tag: Tag) extends Table[Message](tag, "MESSAGES") {
-    def id = column[Int]("id", O.PrimaryKey)
+    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
     def message = column[String]("message")
 

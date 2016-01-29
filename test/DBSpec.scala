@@ -23,18 +23,26 @@ class DBSpec extends Specification {
       println(messages)
     }
 
+    "add Message with autoIncrement" in new WithApplication() {
+      val messageService = new MessageService
+      val createdMessage: Message = Await.result(messageService.create("test message"), 1 seconds)
+
+      createdMessage.id should beEqualTo(4)
+
+      var messages = Await.result(messageService.all(), 1 seconds)
+      messages should not be empty
+
+      println("added message: " + messages)
+    }
+
     "remove and add another messages" in new WithApplication {
       val messageService = new MessageService
 
-      val testMessages = Set(
-        Message(10, "Hello"),
-        Message(11, "Wordl"),
-        Message(12, "Aloha")
-      )
+      val testMessages = Set("Hello", "Wordl", "Aloha")
 
       // read all messages
       var messages = Await.result(messageService.all(), 1 seconds)
-      messages should not be empty
+      messages should have size(3)
 
       // delete all messages from evolution script
       Await.result(Future.sequence(List(1,2,3).map(messageService.deleteById)), 1 seconds)
@@ -48,7 +56,7 @@ class DBSpec extends Specification {
 
       // read all messages
       messages = Await.result(messageService.all(), 1 seconds)
-      messages.toSet must equalTo(testMessages)
+      messages.map(_.message).toSet must equalTo(testMessages.toSet)
     }
   }
 

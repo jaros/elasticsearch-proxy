@@ -24,7 +24,7 @@ class Application @Inject()(messageService: MessageService) extends Controller {
         "status" -> "Parsing message failed",
         "error" -> JsError.toJson(errors)))),
       message =>
-        messageService.create(message).map(m =>
+        messageService.create(message.message).map(m =>
           Ok(Json.obj("status" -> "Success", "message" -> Json.toJson(m)))
         ))
   }
