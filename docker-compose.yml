@@ -1,15 +1,15 @@
 #######
 # Infrastructure
 #######
-postgres:  
-  image: postgres:9.5
-  ports:
-    - "5432:5432"
-  environment:
-    - POSTGRES_USER=play
-    - POSTGRES_PASSWORD=secret
-  volumes:
-    - /var/lib/postgresql/data
+#postgres:
+#  image: postgres:9.5
+#  ports:
+#    - "5432:5432"
+#  environment:
+#    - POSTGRES_USER=play
+#    - POSTGRES_PASSWORD=secret
+#  volumes:
+#    - /var/lib/postgresql/data
 
 elasticsearch:
   image: elasticsearch:latest

@@ -15,16 +15,16 @@ class ApplicationSpec extends Specification {
 
   "Application" should {
 
-    "send 400 on a bad request" in new WithApplication{
+    /*"send 400 on a bad request" in new WithApplication{
       route(FakeRequest(GET, "/boum")) must beSome.which (status(_) == BAD_REQUEST)
-    }
+    }*/
 
     "render the index page" in new WithApplication{
       val home = route(FakeRequest(GET, "/")).get
 
       status(home) must equalTo(OK)
       contentType(home) must beSome("application/json")
-      contentAsString(home) must contain ("Your new application is ready.")
+      contentAsString(home) must contain ( """"status":"OK"""")
     }
   }
 }
