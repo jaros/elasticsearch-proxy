@@ -13,13 +13,15 @@ import play.api.test.Helpers._
 @RunWith(classOf[JUnitRunner])
 class ApplicationSpec extends Specification {
 
+  import AppHelper.mockApplication
+
   "Application" should {
 
     /*"send 400 on a bad request" in new WithApplication{
       route(FakeRequest(GET, "/boum")) must beSome.which (status(_) == BAD_REQUEST)
     }*/
 
-    "render the index page" in new WithApplication{
+    "render the index page" in new WithApplication(mockApplication) {
       val home = route(FakeRequest(GET, "/")).get
 
       status(home) must equalTo(OK)

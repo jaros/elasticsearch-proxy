@@ -1,6 +1,8 @@
 
 import models.Message
 import org.specs2.mutable.Specification
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.WithApplication
 import service.MessageService
 
@@ -8,13 +10,20 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
 
+object AppHelper {
+  def mockApplication: Application = new GuiceApplicationBuilder().disable(classOf[AppModule]).build
+}
+
 class DBSpec extends Specification {
 
   // Evolutions.applyEvolutions()
 
+  import AppHelper.mockApplication
+
+
   "DB MessageService" should {
 
-    "retrieve all messages from db" in new WithApplication {
+    "retrieve all messages from db" in new WithApplication(mockApplication) {
       val messageService = new MessageService
 
       // read all messages
@@ -23,7 +32,7 @@ class DBSpec extends Specification {
       println(messages)
     }
 
-    "add Message with autoIncrement" in new WithApplication() {
+    "add Message with autoIncrement" in new WithApplication(mockApplication) {
       val messageService = new MessageService
       val createdMessage: Message = Await.result(messageService.create("test message"), 1 seconds)
 
@@ -35,18 +44,18 @@ class DBSpec extends Specification {
       println("added message: " + messages)
     }
 
-    "remove and add another messages" in new WithApplication {
+    "remove and add another messages" in new WithApplication(mockApplication) {
       val messageService = new MessageService
 
       val testMessages = Set("Hello", "Wordl", "Aloha")
 
       // read all messages
       var messages = Await.result(messageService.all(), 1 seconds)
-      messages should have size(3)
+      messages should have size (3)
 
       // delete all messages from evolution script
-      Await.result(Future.sequence(List(1,2,3).map(messageService.deleteById)), 1 seconds)
-//      Await.result(messageService.deleteAll(), 1 seconds)
+      Await.result(Future.sequence(List(1, 2, 3).map(messageService.deleteById)), 1 seconds)
+      //      Await.result(messageService.deleteAll(), 1 seconds)
       messages = Await.result(messageService.all(), 1 seconds)
       messages should beEmpty
 

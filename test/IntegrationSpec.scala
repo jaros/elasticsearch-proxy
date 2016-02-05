@@ -12,13 +12,15 @@ import play.api.test.Helpers._
 @RunWith(classOf[JUnitRunner])
 class IntegrationSpec extends Specification {
 
+  import AppHelper.mockApplication
+
   "Application" should {
 
-    "work from within a browser" in new WithBrowser {
+    "work from within a browser" in new WithBrowser(app = mockApplication) {
 
       browser.goTo("http://localhost:" + port)
 
-      browser.pageSource must contain("Your new application is ready.")
+      browser.pageSource must contain(""""status":"OK"""")
     }
   }
 }
