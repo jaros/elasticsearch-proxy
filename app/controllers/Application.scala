@@ -21,4 +21,12 @@ class Application extends Controller {
     }
   }
 
+  def esProxy(action: String) = Action { request =>
+    Ok(s"""
+         Ok     => $action
+         method => ${request.method}
+         path   => ${request.path}
+         body   => ${request.body.asJson}
+      """)
+  }
 }
