@@ -10,6 +10,8 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 # elasticSearch proxy mappings
 
+GET       /index_info/:indexName      controllers.Application.indexInfo(indexName)
+
 GET       /es/*action                 controllers.Application.esProxy(action)
 POST      /es/*action                 controllers.Application.esProxy(action)
 PUT       /es/*action                 controllers.Application.esProxy(action)
