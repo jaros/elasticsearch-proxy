@@ -13,6 +13,7 @@ import scala.concurrent.Future
 
 class Application @Inject()(ws: WSClient) extends Controller {
 
+  val elasticSearchURL: String = "http://localhost:9200"
 
   def index = Action.async {
     Future.successful {
@@ -27,7 +28,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
   def indexInfo(indexName: String) = Action.async {
     val name = if (indexName == "all") "" else indexName
     ws
-      .url(s"http://localhost:9200/$name/_stats/docs,store")
+      .url(s"$elasticSearchURL/$name/_stats/docs,store")
       .get()
       .map { response =>
         val content = response.json \ "_all" \ "total"
@@ -37,13 +38,24 @@ class Application @Inject()(ws: WSClient) extends Controller {
       }
   }
 
-  def esProxy(action: String) = Action { request =>
-    Ok(
-      s"""
+  def esProxy(action: String) = Action.async { request =>
+
+    val requestBody = request.body.asJson
+    println(s"""
          Ok     => $action
          method => ${request.method}
          path   => ${request.path}
-         body   => ${request.body}
+         body   => $requestBody
       """)
+
+    val wsRequest = ws.url(s"$elasticSearchURL/$action").withMethod(request.method)
+
+    if (requestBody.isDefined) {
+      println("body =>> " + requestBody.get)
+      wsRequest.withBody(requestBody.get)
+    }
+    wsRequest.execute().map { response =>
+      new Status(response.status)(response.json)
+    }
   }
 }
