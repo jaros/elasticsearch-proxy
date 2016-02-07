@@ -11,9 +11,10 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class Application @Inject()(wsClient: WSClient) extends Controller {
+class Application(wsClient: WSClient, elasticSearchURL: String) extends Controller {
+        @Inject def this(wsClient: WSClient) = this(wsClient, "http://localhost:9200")
 
-  val elasticSearchURL: String = "http://localhost:9200"
+//  val elasticSearchURL: String = "http://localhost:9200"
 
   def index = Action.async {
     Future.successful {
