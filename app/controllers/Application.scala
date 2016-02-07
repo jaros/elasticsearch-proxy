@@ -26,7 +26,7 @@ class Application @Inject()(esClient: ElasticSearchClient) extends Controller {
     esClient.indexStatus(indexName)
   }
 
-  def esProxy(action: String) = Action.async { request =>
-    esClient.esProxy(request, action)
+  def esProxy(action: String) = Action.async { implicit request =>
+    esClient.esProxy(action)
   }
 }

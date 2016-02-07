@@ -34,7 +34,7 @@ class WSClientSpec extends Specification {
       } { implicit port =>
         WsTestClient.withClient { client =>
 
-          val result = new ElasticSearchClient(client, "").esProxy(fakeRequest, "privet_index/person/2")
+          val result = new ElasticSearchClient(client, "").esProxy("privet_index/person/2")(fakeRequest)
           println("result.body -- " + Helpers.contentAsString(result))
           Helpers.contentAsJson(result) must beEqualTo(Json.obj("full_name" -> "octocat/Hello-World"))
         }

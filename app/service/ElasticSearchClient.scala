@@ -27,7 +27,7 @@ class ElasticSearchClient(wsClient: WSClient, elasticSearchURL: String) {
       }
   }
 
-  def esProxy(request: Request[AnyContent], urlAction: String): Future[Result] = {
+  def esProxy(urlAction: String)(implicit request: Request[AnyContent]): Future[Result] = {
     val requestBody = request.body.asText
     println(
       s"""
