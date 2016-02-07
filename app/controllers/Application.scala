@@ -11,7 +11,7 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class Application @Inject()(ws: WSClient) extends Controller {
+class Application @Inject()(wsClient: WSClient) extends Controller {
 
   val elasticSearchURL: String = "http://localhost:9200"
 
@@ -27,7 +27,7 @@ class Application @Inject()(ws: WSClient) extends Controller {
 
   def indexInfo(indexName: String) = Action.async {
     val name = if (indexName == "all") "" else indexName
-    ws
+    wsClient
       .url(s"$elasticSearchURL/$name/_stats/docs,store")
       .get()
       .map { response =>
@@ -40,21 +40,19 @@ class Application @Inject()(ws: WSClient) extends Controller {
 
   def esProxy(action: String) = Action.async { request =>
 
-    val requestBody = request.body.asJson
-    println(s"""
+    val requestBody = request.body.asText
+    println(
+      s"""
          Ok     => $action
          method => ${request.method}
          path   => ${request.path}
          body   => $requestBody
+         header => ${request.headers}
       """)
 
-    val wsRequest = ws.url(s"$elasticSearchURL/$action").withMethod(request.method)
-
-    if (requestBody.isDefined) {
-      println("body =>> " + requestBody.get)
-      wsRequest.withBody(requestBody.get)
-    }
-    wsRequest.execute().map { response =>
+    wsClient.url(s"$elasticSearchURL/$action")
+      .withMethod(request.method)
+      .withBody(requestBody.getOrElse("")).execute().map { response =>
       new Status(response.status)(response.json)
     }
   }
