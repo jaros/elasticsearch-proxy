@@ -12,7 +12,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 GET       /index_info/:indexName      controllers.Application.indexInfo(indexName)
 
-GET       /es/*action                 controllers.Application.esProxy(action)
-POST      /es/*action                 controllers.Application.esProxy(action)
-PUT       /es/*action                 controllers.Application.esProxy(action)
-DELETE    /es/*action                 controllers.Application.esProxy(action)
+GET       /*action                 controllers.Application.esProxy(action)
+POST      /*action                 controllers.Application.esProxy(action)
+PUT       /*action                 controllers.Application.esProxy(action)
+DELETE    /*action                 controllers.Application.esProxy(action)
