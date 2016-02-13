@@ -29,4 +29,9 @@ class Application @Inject()(esClient: ElasticSearchClient) extends Controller {
   def esProxy(action: String) = Action.async { implicit request =>
     esClient.esProxy(action)
   }
+
+  //This is needed if you are behind a load balancer or a proxy
+  def userIPAddress(request: RequestHeader) =
+    request.headers.get("x-forwarded-for").getOrElse(request.remoteAddress.toString)
+
 }
