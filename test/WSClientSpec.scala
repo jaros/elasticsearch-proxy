@@ -3,7 +3,7 @@ import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
 import play.api.libs.json.Json
-import play.api.mvc.{Action, Results}
+import play.api.mvc.{AnyContent, Request, Action, Results}
 import play.api.routing.sird._
 import play.api.test._
 import play.core.server.Server
@@ -19,16 +19,17 @@ class WSClientSpec extends Specification {
   "ElasticSearch client" should {
     "send request to ES server with body content" in {
 
-      val fakeRequest = FakeRequest("PUT", "/privet_index/person/2").withTextBody(
+      val fakeRequest = FakeRequest("PUT", "/privet_index/person/2").withJsonBody(Json.parse(
         """{
              "user" : "Bob3",
              "post_date" : "2009-11-15T14:12:12",
               "message" : "ttest3"
-              }""")
+              }"""))
 
       Server.withRouter() {
         // ES server emulation
-        case PUT(p"/privet_index/person/2") => Action {
+        case PUT(p"/privet_index/person/2") => Action { fakeReq: Request[AnyContent] =>
+          fakeReq.body.asText.get must contain("ttest3")
           Results.Ok(Json.obj("full_name" -> "octocat/Hello-World"))
         }
       } { implicit port =>
