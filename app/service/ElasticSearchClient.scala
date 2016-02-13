@@ -28,7 +28,7 @@ class ElasticSearchClient(wsClient: WSClient, elasticSearchURL: String) {
   }
 
   def esProxy(urlAction: String)(implicit request: Request[AnyContent]): Future[Result] = {
-    val requestBody = request.body.asText
+    val requestBody = request.body.asJson
     println(
       s"""
          Ok     => $urlAction
@@ -40,7 +40,7 @@ class ElasticSearchClient(wsClient: WSClient, elasticSearchURL: String) {
 
     wsClient.url(s"$elasticSearchURL/$urlAction")
       .withMethod(request.method)
-      .withBody(requestBody.getOrElse("")).execute().map { response =>
+      .withBody(requestBody.getOrElse(Json.obj())).execute().map { response =>
        println(response)
       new Status(response.status)(response.json)
     }

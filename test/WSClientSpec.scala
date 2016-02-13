@@ -24,12 +24,12 @@ class WSClientSpec extends Specification {
              "user" : "Bob3",
              "post_date" : "2009-11-15T14:12:12",
               "message" : "ttest3"
-              }"""))
+              }"""))//.withHeaders("content-type" -> "application/json")
 
       Server.withRouter() {
         // ES server emulation
         case PUT(p"/privet_index/person/2") => Action { fakeReq: Request[AnyContent] =>
-          fakeReq.body.asText.get must contain("ttest3")
+          Json.stringify(fakeReq.body.asJson.get) must contain("ttest3")
           Results.Ok(Json.obj("full_name" -> "octocat/Hello-World"))
         }
       } { implicit port =>
